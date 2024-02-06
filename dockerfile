@@ -18,17 +18,8 @@ COPY src ./src
 # Build the WAR file
 RUN mvn package
 
-# Stage 2: Production stage
-FROM tomcat:8.5.78-jdk11-openjdk-slim
-
-
-# Copy the built WAR file from the build stage to the Tomcat webapps directory
-COPY --from=build-stage /app/target/*.war /usr/local/tomcat/webapps/
-
-
-# Expose the port on which Tomcat will listen (usually port 8080)
-EXPOSE 9901
-
-
-# Start Tomcat
+FROM varakumar/mytomcat:latest
+LABEL maintainer="chaitanya"
+ADD ./target/*.war /usr/local/tomcat/webapps/
+EXPOSE 8090
 CMD ["catalina.sh", "run"]
